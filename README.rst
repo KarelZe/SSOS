@@ -17,10 +17,11 @@ Open up your shell and you are almost done...
     # Debian, Ubuntu, etc.
     $ wget https://github.com/KarelZe/SSOS/archive/master.zip
     $ unzip master.zip
-    $ mv ssos-master ssos
-    $ cd ssos
+    $ mv SSOS-master SSOS
+    $ cd SSOS
     $ make
     $ SET ENV VAR (sign up to genius.com for free)...
+    $ GET PhantomJS copy to /usr/local/bin/ and make it executable
 
 get in contact
 ==============
