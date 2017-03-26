@@ -1,3 +1,6 @@
+numpy
+textblob
+textblob
 selenium
 lxml
 requests
