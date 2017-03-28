@@ -12,7 +12,7 @@ class Artist(object):
         self.artist_name = None
         self.artist_uri = None
         self.albums = None
-        # can contain array with dicts containing track_uri, track_name and valence
+        # can contain array with dicts containing track_uri, track_name and valence-, lyric- and total score
         self.tracks = None
 
 
@@ -42,6 +42,13 @@ class Genius(object):
             raise RuntimeError()
 
     def genius_get_lyric_features(self, tracks, artist_name):
+        """
+        function queries api.genius.com with track_name and artist_name for url,
+        containing the lyrics of the song. Lyrics are being analyzed by lyric_analysis()
+        :param tracks:
+        :param artist_name:
+        :return:
+        """
         track_name = [track['track_name'] for track in tracks]
 
         for index, item in enumerate(track_name):
@@ -89,8 +96,8 @@ class Genius(object):
 
     def __init__(self):
         self.api_endpoint = 'http://api.genius.com/{}'
-        # set Keys for Genius API-Requests
         try:
+            # set Keys for Genius API-Requests
             self.client_access_token = os.environ["CLIENT_ACCESS_TOKEN"]
             # open sad dictionary
             self.dictionary = {}
