@@ -3,7 +3,7 @@ import base64
 import os
 import nltk
 import requests
-
+import pandas as pd
 from bs4 import BeautifulSoup
 
 
@@ -47,7 +47,7 @@ class Genius(object):
         containing the lyrics of the song. Lyrics are being analyzed by lyric_analysis()
         :param tracks:
         :param artist_name:
-        :return:
+        :return: tracks: (modified)
         """
         track_name = [track['track_name'] for track in tracks]
 
@@ -55,9 +55,9 @@ class Genius(object):
             params = {'q': track_name[index] + '&' + artist_name}
             url = 'search'
             try:
-                json = self._get(url, params)["response"]["hits"][0]["result"]
+                json = self._get(url, params)['response']['hits'][0]['result']
                 lyric_url = json['url']
-                lyrics = self._get(lyric_url, None, True)
+                lyrics = self._get(lyric_url, None, web=True)
                 soup = BeautifulSoup(lyrics.text, 'html.parser')
                 lyric_text = soup.find("lyrics").get_text()
                 tracks[index]['lyrics'] = self.lyric_analysis(lyric_text)
@@ -185,7 +185,7 @@ class Spotify(object):
             url = "albums/{}/tracks".format(i)
             json = self._get(url, params)['items']
             tracks_per_album = [{'track_name': i['name'], 'track_uri': str.replace(i['uri'],
-                                'spotify:track:', '')} for i in json]
+                                                                                   'spotify:track:', '')} for i in json]
             tracks += tracks_per_album
         return tracks
 
@@ -223,7 +223,7 @@ class Spotify(object):
 
         # spotify api queries
         print("query spotify_artist...")
-        spotify_artist = self.spotify_get_artist("Scott McKenzie")
+        spotify_artist = self.spotify_get_artist("The Rasmus")
         artist.artist_name = spotify_artist['artist_name']
         print("query spotify_artist...")
         artist.artist_uri = spotify_artist['artist_uri']
@@ -240,7 +240,14 @@ class Spotify(object):
         # artist.artist_name = 'The Rasmus'
         print("query genius.com and calculate scores...")
         artist.tracks = genius.genius_get_lyric_features(artist.tracks, artist.artist_name)
-        print(vars(artist))
+
+        # convert to data frame, sort by total column
+        pd.set_option('expand_frame_repr', False)
+        df = pd.DataFrame(artist.tracks, )
+        # remove unnecessary fields and rearrange columns...
+        df = df[['track_name', 'valence', 'lyrics', 'total']]
+        df.sort_values(by='total', inplace=True, ascending=False)
+        print(df)
 
 
 custom_spotify = Spotify()
