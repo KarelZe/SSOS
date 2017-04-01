@@ -4,6 +4,7 @@ import os
 import nltk
 import requests
 import pandas as pd
+import time
 from bs4 import BeautifulSoup
 
 
@@ -222,32 +223,42 @@ class Spotify(object):
         artist = Artist()
 
         # spotify api queries
-        print("query spotify_artist...")
+        start = time.time()
+        print("query spotify_artist for artist name and artist uri...")
         spotify_artist = self.spotify_get_artist("The Rasmus")
         artist.artist_name = spotify_artist['artist_name']
-        print("query spotify_artist...")
         artist.artist_uri = spotify_artist['artist_uri']
+        end = time.time()
+        print(end-start)
         print("query spotify_albums...")
         artist.albums = self.spotify_get_albums(artist.artist_uri)
+        end = time.time()
+        print(end-start)
         print("query spotify_tracks...")
         artist.tracks = self.spotify_get_album_tracks(artist.albums)
+        end = time.time()
+        print(end-start)
         print("query spotify_audio_features...")
         artist.tracks = self.spotify_get_audio_features(artist.tracks)
-
+        end = time.time()
+        print(end-start)
         # genius api queries
         genius = Genius()
         # artist.tracks = [{'track_name': 'In the shadows', 'valence': 0.2}]
         # artist.artist_name = 'The Rasmus'
         print("query genius.com and calculate scores...")
         artist.tracks = genius.genius_get_lyric_features(artist.tracks, artist.artist_name)
-
+        end = time.time()
+        print(end-start)
         # convert to data frame, sort by total column
         pd.set_option('expand_frame_repr', False)
         df = pd.DataFrame(artist.tracks, )
-        # remove unnecessary fields and rearrange columns...
+        # remove unnecessary fields and rearrange columns
         df = df[['track_name', 'valence', 'lyrics', 'total']]
         df.sort_values(by='total', inplace=True, ascending=False)
         print(df)
+        end = time.time()
+        print(end-start)
 
 
 custom_spotify = Spotify()
