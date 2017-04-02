@@ -163,7 +163,6 @@ class Spotify(object):
         """
         params = {'album_type': 'album'}
         album_url = "artists/{}/albums".format(artist_uri)
-
         # extract relevant information
         json = self._get(album_url, params)["items"]
         albums = [{'album_name': i['name'], 'album_uri': str.replace(i['uri'], 'spotify:album:', '')}
