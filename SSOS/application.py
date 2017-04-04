@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 import base64
 import os
-import nltk
 import requests
-
+import nltk
 from bs4 import BeautifulSoup
-
 class Artist(object):
     def __init__(self):
         self.artist_name = None
@@ -76,12 +74,13 @@ class Genius(object):
 
         # search for word in dictionary, increase sad_count for match
         for word in tokens:
-            if str.lower(word) in self.dictionary:
+            if str.lower(word) in self.dictionary or self.lemmatizer.lemmatize(word) in self.dictionary:
                 sad_count += 1
         return sad_count / word_count
 
     def __init__(self):
         self.api_endpoint = 'http://api.genius.com/{}'
+        self.lemmatizer = WordNetLemmatizer()
         # set Keys for Genius API-Requests
         try:
             self.client_access_token = os.environ["CLIENT_ACCESS_TOKEN"]
