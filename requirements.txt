@@ -1,4 +1,5 @@
-pandas
-bs4
 nltk
+numpy
+selenium
+lxml
 requests
