@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 import base64
 import os
-import requests
 import nltk
-from bs4 import BeautifulSoup
+import requests
 import pandas as pd
 import time
 from bs4 import BeautifulSoup
+
 
 class Artist(object):
     def __init__(self):
@@ -87,17 +87,6 @@ class Genius(object):
         sad_count = 0
 
         # search for word in dictionary, increase sad_count for match
-
-        for word in tokens:
-            if str.lower(word) in self.dictionary or self.lemmatizer.lemmatize(word) in self.dictionary:
-                sad_count += 1
-        return sad_count / word_count
-
-    def __init__(self):
-        self.api_endpoint = 'http://api.genius.com/{}'
-        self.lemmatizer = WordNetLemmatizer()
-        # set Keys for Genius API-Requests
-
         if tokens is not None:
             for word in tokens:
                 if str.lower(word) in self.dictionary:
@@ -108,7 +97,6 @@ class Genius(object):
 
     def __init__(self):
         self.api_endpoint = 'http://api.genius.com/{}'
-
         try:
             # set Keys for Genius API-Requests
             self.client_access_token = os.environ["CLIENT_ACCESS_TOKEN"]
